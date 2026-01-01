@@ -1,0 +1,20 @@
+{
+  // Nuxt가 자동으로 생성하는 타입 설정을 상속받습니다.
+
+  "extends": "./.nuxt/tsconfig.json",
+
+  "compilerOptions": {
+    // VS Code가 컴포넌트 타입을 더 잘 찾도록 도와주는 설정들입니다.
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "noImplicitAny": false,
+    "allowJs": true,
+    "strict": true
+  },
+
+  // 프로젝트 내의 모든 파일과 Nuxt가 만든 타입 정의 파일을 포함시킵니다.
+  "include": [".nuxt/nuxt.d.ts", "**/*", "components/**/*"],
+
+  // 불필요한 폴더는 제외하여 성능을 높입니다.
+  "exclude": ["node_modules", ".output", "dist"]
+}
