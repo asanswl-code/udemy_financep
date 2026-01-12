@@ -1,44 +1,51 @@
 <template>
-  <div>
-    <div class="font-bold" :class="[color]">{{ title }}</div>
-    <div class="text-2xl font-extrabold text-black dark:text-white mb-2">
-      <USkeleton class="h-8 w-full" v-if="loading" />
-      <div v-else>{{ amount }}</div>
-    </div>
-
     <div>
-      <USkeleton class="h-6 w-full" v-if="loading" />
-      <div v-else class="flex space-x-1 items-center text-sm">
-        <UIcon
-          name="i-heroicons:arrow-trending-up"
-          class="w-6 h-6"
-          :class="[color]"
-        />
-        <div class="text-gray-500 dark:text-gray-400">
-          30% vs last period
+        <div class="font-bold" :class="[color]">{{ title }}</div>
+        <div class="text-2xl font-extrabold text-black dark:text-white mb-2">
+            <USkeleton class="h-8 w-full" v-if="loading" />
+            <div v-else>{{ currency }}</div>
         </div>
-      </div>
+
+        <div>
+            <USkeleton class="h-6 w-full" v-if="loading" />
+            <div v-else class="flex space-x-1 items-center text-sm">
+                <UIcon :name="icon" class="w-6 h-6" :class="{ green: trendingUp, red: !trendingUp }" />
+                <div class="text-gray-500 dark:text-gray-400">{{ percentageTrend }} vs last period</div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  title: String,
-  amount: Number,
-  lastAmount: Number,
-  color: String,
-  loading: Boolean,
+const props = defineProps({
+    title: String,
+    amount: Number,
+    lastAmount: Number,
+    color: String,
+    loading: Boolean,
+});
+
+const trendingUp = computed(() => props.amount > props.lastAmount);
+const icon = computed(() => (trendingUp.value ? "i-heroicons:arrow-trending-up" : "i-heroicons:arrow-trending-down"));
+
+const { currency } = useCurrency(props.amount);
+
+const percentageTrend = computed(() => {
+    if (props.amount === 0 || props.lastAmount === 0) return "∞%";
+
+    const ratio = Math.abs(((props.amount - props.lastAmount) / props.lastAmount) * 100);
+
+    return `${ratio.toFixed(0)} %`;
 });
 </script>
 
 <style>
 @reference "D:\coding\udemy\financep\app\assets\css\main.css";
 .green {
-  @apply text-green-600 dark:text-green-400;
+    @apply text-green-600 dark:text-green-400;
 }
 
 .red {
-  @apply text-red-600 dark:text-red-400;
+    @apply text-red-600 dark:text-red-400;
 }
 </style>
